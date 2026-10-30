@@ -1,0 +1,15 @@
+-- SQLite project master/reference file.
+-- Do not run this file in Oracle or as a SQL*Plus script.
+-- From PowerShell in this directory, execute:
+--   python .\run_practicals.py
+--
+-- The Python runner executes the following SQLite scripts in order against
+-- the single local database practicals.db:
+--   01_employee_transactions.sql
+--   02_employee_alter_update_delete.sql
+--   03_company_queries.sql
+--   04_customer_trigger.sql
+--   05_employee_cursor.sql (verification SQL; cursor itself is Python sqlite3)
+--
+-- The runner handles conditional SQLite ALTER TABLE operations and SQL
+-- trigger definitions using sqlite3.Connection.executescript().

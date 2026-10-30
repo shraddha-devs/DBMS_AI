@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101829">
+  <meta name="description" content="Ask questions about your SQLite practicals in natural language.">
+  <title>Database AI Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <button class="mobile-backdrop" id="mobile-backdrop" aria-label="Dismiss navigation overlay"></button>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><ellipse cx="16" cy="8" rx="10" ry="4"></ellipse><path d="M6 8v8c0 2.2 4.5 4 10 4s10-1.8 10-4V8M6 16v8c0 2.2 4.5 4 10 4s10-1.8 10-4v-8"></path><path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4"></path></svg>
+        </div>
+        <div><strong>DataDesk</strong><span>DATABASE AI ASSISTANT</span></div>
+        <button class="icon-button close-sidebar" id="close-sidebar" aria-label="Close menu">×</button>
+      </div>
+
+      <button class="new-chat-button" id="new-chat-button">
+        <span aria-hidden="true">＋</span> New conversation
+      </button>
+
+      <div class="side-section">
+        <div class="side-label">WORKSPACE</div>
+        <button class="side-link active" data-panel="overview">
+          <span class="side-icon">◈</span> Database overview
+        </button>
+        <button class="side-link" data-panel="practicals">
+          <span class="side-icon">▤</span> Supported practicals
+        </button>
+        <button class="side-link" data-panel="about">
+          <span class="side-icon">ⓘ</span> About this project
+        </button>
+      </div>
+
+      <div class="side-section history-section">
+        <div class="history-heading"><span class="side-label">RECENT QUESTIONS</span><button id="clear-history" title="Clear recent history">Clear</button></div>
+        <div id="history-list" class="history-list"><p class="empty-history">Your questions will appear here.</p></div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="connection-card">
+          <div class="connection-row"><span class="status-dot" id="connection-dot"></span><strong id="connection-label">Checking database…</strong></div>
+          <span id="connection-detail">SQLite · read-only connection</span>
+        </div>
+        <div class="profile-row"><div class="avatar small-avatar">DB</div><div><strong>Local workspace</strong><span>Private · on this device</span></div><span class="profile-menu">•••</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button menu-button" id="menu-button" aria-label="Open menu">☰</button>
+          <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-sep">/</span><strong>Assistant</strong></div>
+        </div>
+        <div class="topbar-right">
+          <div class="readonly-badge"><span>●</span> Read-only mode</div>
+          <button class="icon-button" id="clear-conversation" title="Clear conversation" aria-label="Clear conversation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="conversation" id="conversation" aria-live="polite">
+        <div class="welcome" id="welcome">
+          <div class="welcome-orb" aria-hidden="true"><span>✦</span></div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR DATABASE, IN PLAIN ENGLISH</div>
+          <h1>Welcome to <span>Database AI Assistant</span></h1>
+          <p class="welcome-subtitle">Ask questions about your database in natural language.</p>
+          <div class="welcome-tags"><span><i class="tag-dot violet"></i>5 practicals</span><span><i class="tag-dot green"></i>Live SQLite data</span><span><i class="tag-dot blue"></i>No API key required</span></div>
+          <div class="suggestion-heading"><span>Try asking</span><span>Pick a question to get started</span></div>
+          <div class="suggestion-grid" id="suggestion-grid">
+            <button class="suggestion-card" data-question="Show all employees."><span class="suggestion-icon indigo">♙</span><span><strong>Show all employees</strong><small>Browse the company directory</small></span><b>↗</b></button>
+            <button class="suggestion-card" data-question="What is the highest salary?"><span class="suggestion-icon amber">↗</span><span><strong>Who earns the most?</strong><small>Find the highest salary</small></span><b>↗</b></button>
+            <button class="suggestion-card" data-question="Find employees working on the IoT project."><span class="suggestion-icon green">⌘</span><span><strong>Explore the IoT project</strong><small>See workers and proposed raise</small></span><b>↗</b></button>
+            <button class="suggestion-card" data-question="What is the total salary in the Accounts department?"><span class="suggestion-icon rose">₹</span><span><strong>Accounts salary summary</strong><small>Review department aggregates</small></span><b>↗</b></button>
+            <button class="suggestion-card" data-question="Which projects involve Scott?"><span class="suggestion-icon blue">◎</span><span><strong>Projects involving Scott</strong><small>Check worker and manager roles</small></span><b>↗</b></button>
+            <button class="suggestion-card" data-question="Show the latest customer salary audit records."><span class="suggestion-icon violet">↻</span><span><strong>Customer audit history</strong><small>Inspect trigger events</small></span><b>↗</b></button>
+          </div>
+          <div class="extra-suggestions" id="extra-suggestions"></div>
+        </div>
+        <div class="message-list" id="message-list"></div>
+      </section>
+
+      <section class="composer-wrap">
+        <div class="composer-hint" id="composer-hint"><span class="sparkle">✦</span> Answers are generated from live database results</div>
+        <form class="composer" id="chat-form">
+          <label class="sr-only" for="question-input">Ask a database question</label>
+          <textarea id="question-input" rows="1" maxlength="500" placeholder="Ask anything about your practicals…" autocomplete="off"></textarea>
+          <div class="composer-tools">
+            <span class="input-tip"><kbd>Enter</kbd> to send <span class="tip-sep">·</span> <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</span>
+            <button class="send-button" id="send-button" type="submit" aria-label="Send question" disabled>
+              <span>Ask</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+          </div>
+        </form>
+        <p class="privacy-note"><span>⌑</span> Your database stays on this device. The assistant uses read-only queries.</p>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="info-dialog" id="info-dialog">
+    <div class="dialog-top"><div class="dialog-mark">◈</div><button class="icon-button" id="close-dialog" aria-label="Close">×</button></div>
+    <div id="dialog-content"></div>
+  </dialog>
+</body>
+</html>

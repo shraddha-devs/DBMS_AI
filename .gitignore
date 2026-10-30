@@ -1,0 +1,30 @@
+# Credentials and connection secrets
+.env
+.env.*
+!.env.example
+*.wallet
+*.p12
+*.sso
+*.jks
+*.key
+*.pem
+wallet/
+Wallet_*/
+.vscode/oracle-local.json
+
+# Local database files and generated Oracle artifacts
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.log
+*.trc
+*.dmp
+*.lst
+*.out
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
